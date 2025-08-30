@@ -1,1 +1,566 @@
 
+#### Cours Complet sur Git ###
+
+Table des matières
+
+1. Introduction à Git
+
+2. Configuration initiale
+
+3. Cycle de vie des fichiers
+
+4. Les commits
+
+5. Les branches
+
+6. Fusion et résolution de conflits
+
+7. Travail avec les dépôts distants
+
+8. Stash - Mettre de côté des modifications
+
+9. Commandes avancées
+
+
+1. Introduction à Git <a name="introduction"></a> 
+
+Git est un système de contrôle de version distribué qui permet de :
+
+Suivre les modifications des fichiers
+
+Collaborer sur du code
+
+Gérer différentes versions d'un projet
+
+Concepts clés :
+Dépôt (Repository) : Conteneur du projet avec son historique
+
+Commit : Snapshot des modifications à un moment donné
+
+Branche : Ligne de développement indépendante
+
+Merge : Fusion de branches
+
+2. Configuration initiale <a name="configuration"></a>
+bash
+# Configuration de l'utilisateur
+git config --global user.name "Votre Nom"
+git config --global user.email "votre@email.com"
+
+# Vérification de la configuration
+git config --list
+
+# Initialisation d'un nouveau dépôt
+git init nom_du_projet
+cd nom_du_projet
+
+# Cloner un dépôt existant
+git clone https://github.com/utilisateur/depot.git
+3. Cycle de vie des fichiers <a name="cycle-de-vie"></a>
+États des fichiers :
+Untracked : Fichier nouveau, non suivi par Git
+
+Modified : Fichier modifié mais pas en staging
+
+Staged : Fichier prêt à être commité
+
+Committed : Fichier sauvegardé dans le dépôt
+
+Commandes de base :
+bash
+# Vérifier l'état des fichiers
+git status
+
+# Ajouter tous les fichiers au staging area
+git add -A          # Tous les fichiers (nouveaux, modifiés, supprimés)
+git add --all       # Équivalent à -A
+git add .           # Fichiers du répertoire courant et sous-répertoires
+
+# Ajouter un fichier spécifique
+git add nom_du_fichier
+
+# Retirer un fichier du staging area
+git reset nom_du_fichier
+git restore --staged nom_du_fichier
+
+# Voir les différences
+git diff                    # Modifications pas encore staged
+git diff --staged           # Modifications staged
+git diff nom_du_fichier     # Différences pour un fichier spécifique
+
+# Supprimer des fichiers
+git rm nom_du_fichier           # Supprime le fichier du dépôt et du système
+git rm -f nom_du_fichier        # Force la suppression
+git rm -r nom_du_dossier        # Supprime récursivement un dossier
+4. Les commits <a name="commits"></a>
+bash
+# Créer un commit
+git commit -m "Message descriptif du commit"
+
+# Modifier le dernier commit
+git commit --amend -m "Nouveau message"
+
+# Annuler le dernier commit (conserve les modifications)
+git reset HEAD~
+git reset --soft HEAD~
+
+# Annuler le dernier commit (supprime les modifications)
+git reset --hard HEAD~
+
+# Voir l'historique des commits
+git log
+git log --oneline          # Format compact
+git log --graph            # Avec graphique des branches
+git log -p                 # Avec les différences
+git log --since="2023-01-01"
+
+# Interface graphique pour visualiser l'historique
+gitk
+5. Les branches <a name="branches"></a>
+bash
+# Lister toutes les branches
+git branch
+
+# Créer une nouvelle branche
+git branch nom_de_la_branche
+
+# Se déplacer vers une branche
+git checkout nom_de_la_branche
+
+# Créer et se déplacer vers une nouvelle branche
+git checkout -b nouvelle_branche
+
+# Supprimer une branche locale
+git branch -d nom_de_la_branche      # Suppression sécurisée
+git branch -D nom_de_la_branche      # Suppression forcée
+
+# Renommer la branche courante
+git branch -m nouveau_nom
+6. Fusion et résolution de conflits <a name="fusion"></a>
+bash
+# Fusionner une branche dans la branche courante
+git merge nom_de_la_branche
+
+# En cas de conflit, Git marquera les fichiers en conflit
+# Éditez les fichiers pour résoudre les conflits, puis :
+git add fichier_en_conflit
+git commit -m "Résolution du conflit"
+
+# Annuler un merge en cours de conflit
+git merge --abort
+7. Travail avec les dépôts distants <a name="depots-distants"></a>
+bash
+# Ajouter un dépôt distant
+git remote add origin https://github.com/utilisateur/depot.git
+
+# Voir les dépôts distants
+git remote -v
+
+# Récupérer les modifications sans fusionner
+git fetch origin
+
+# Récupérer et fusionner les modifications
+git pull origin nom_de_la_branche
+
+# Pousser les modifications vers le dépôt distant
+git push origin nom_de_la_branche
+
+# Supprimer une branche distante
+git push origin --delete nom_de_la_branche
+
+# Suivre une branche distante
+git branch --set-upstream-to=origin/nom_de_la_branche nom_de_la_branche
+8. Stash - Mettre de côté des modifications <a name="stash"></a>
+bash
+# Mettre de côté les modifications non commitées
+git stash
+git stash save "Message descriptif"
+
+# Lister tous les stash
+git stash list
+
+# Récupérer le dernier stash et le supprimer de la liste
+git stash pop
+
+# Récupérer un stash sans le supprimer de la liste
+git stash apply
+git stash apply stash@{n}    # Appliquer un stash spécifique
+
+# Voir le contenu d'un stash
+git stash show
+git stash show stash@{n} -p  # Voir le diff détaillé
+
+# Supprimer un stash spécifique
+git stash drop stash@{n}
+
+# Vider toute la liste de stash
+git stash clear
+9. Commandes avancées et bonnes pratiques <a name="avance"></a>
+bash
+# Ignorer des fichiers avec .gitignore
+# Créez un fichier .gitignore à la racine du projet
+echo "node_modules/" >> .gitignore
+echo ".env" >> .gitignore
+
+# Taguer une version
+git tag v1.0.0
+git tag -a v1.0.0 -m "Version 1.0.0"
+git push origin --tags
+
+# Chercher dans l'historique
+git grep "motif"          # Chercher du texte dans les fichiers
+git log --grep="motif"    # Chercher dans les messages de commit
+
+# Nettoyer les fichiers non trackés
+git clean -n              # Voir ce qui sera supprimé
+git clean -f              # Supprimer les fichiers non trackés
+git clean -fd             # Supprimer fichiers et dossiers non trackés
+
+# Rebase interactif (pour réécrire l'historique)
+git rebase -i HEAD~3
+
+# Bisect pour trouver un commit qui a introduit un bug
+git bisect start
+git bisect bad
+git bisect good commit_sha
+# ... tester à chaque étape
+git bisect reset
+Workflow typique
+bash
+# 1. Mettre à jour le dépôt local
+git pull origin main
+
+# 2. Créer une nouvelle branche pour une feature
+git checkout -b feature/nouvelle-fonctionnalite
+
+# 3. Développer et commit régulièrement
+git add -A
+git commit -m "Ajout de la nouvelle fonctionnalité"
+
+# 4. Pousser la branche
+git push origin feature/nouvelle-fonctionnalite
+
+# 5. Créer une Pull Request sur GitHub/GitLab
+
+# 6. Après approbation, merger dans main
+git checkout main
+git pull origin main
+git merge feature/nouvelle-fonctionnalite
+git push origin main
+
+# 7. Supprimer la branche locale et distante
+git branch -d feature/nouvelle-fonctionnalite
+git push origin --delete feature/nouvelle-fonctionnalite
+Conclusion
+Git est un outil puissant qui demande de la pratique. N'hésitez pas à :
+
+Expérimenter dans des dépôts de test
+
+Utiliser git help [commande] pour plus d'informations
+
+Visualiser l'historique avec gitk ou git log --graph
+
+#La maîtrise de Git vous rendra plus efficace dans tous vos projets de développement !
+
+
+###########################################################################################################################################################################################################################
+###########################################################################################################################################################################################################################
+
+Cours Complet sur Git
+
+Table des matières
+
+Introduction à Git
+
+Configuration initiale
+
+Cycle de vie des fichiers
+
+Les commits
+
+Les branches
+
+Fusion et résolution de conflits
+
+Travail avec les dépôts distants
+
+Stash - Mettre de côté des modifications
+
+Commandes avancées et bonnes pratiques
+
+1. Introduction à Git <a name="introduction"></a>
+
+Git est un système de contrôle de version distribué qui permet de :
+
+Suivre les modifications des fichiers
+
+Collaborer sur du code
+
+Gérer différentes versions d'un projet
+
+Concepts clés :
+
+Dépôt (Repository) : Conteneur du projet avec son historique
+
+Commit : Snapshot des modifications à un moment donné
+
+Branche : Ligne de développement indépendante
+
+Merge : Fusion de branches
+
+2. Configuration initiale <a name="configuration"></a>
+
+Avant de commencer à utiliser Git, il est essentiel de le configurer.
+
+Configuration de l'utilisateur :
+
+git config --global user.name "Votre Nom"
+git config --global user.email "votre@email.com"
+
+Vérification de la configuration :
+git config --list
+
+Initialisation d'un nouveau dépôt :
+
+git init nom_du_projet
+cd nom_du_projet
+
+Cloner un dépôt existant :
+git clone https://github.com/utilisateur/depot.git
+
+3. Cycle de vie des fichiers <a name="cycle-de-vie"></a>
+
+Git suit l'état des fichiers à travers plusieurs étapes :
+
+Untracked : Fichier nouveau, non suivi par Git
+
+Modified : Fichier modifié mais pas encore ajouté à l'index
+
+Staged : Fichier prêt à être commité
+
+Committed : Fichier sauvegardé dans le dépôt
+
+Commandes de base pour suivre les fichiers :
+
+# Vérifier l'état des fichiers
+
+git status
+
+# Ajouter tous les fichiers au staging area
+
+git add -A          # Tous les fichiers (nouveaux, modifiés, supprimés)
+git add .           # Fichiers du répertoire courant et sous-répertoires
+git add nom_du_fichier  # Ajouter un fichier spécifique
+
+# Retirer un fichier du staging area
+
+git reset nom_du_fichier
+git restore --staged nom_du_fichier
+
+# Voir les différences
+
+git diff                    # Modifications pas encore staged
+git diff --staged           # Modifications staged
+git diff nom_du_fichier     # Différences pour un fichier spécifique
+
+# Supprimer des fichiers
+
+git rm nom_du_fichier           # Supprime du dépôt et du système
+git rm -f nom_du_fichier        # Force la suppression
+git rm -r nom_du_dossier        # Supprime récursivement un dossier
+
+4. Les commits <a name="commits"></a>
+
+Un commit est un enregistrement des modifications dans l'historique du dépôt.
+
+Créer un commit :
+
+git commit -m "Message descriptif du commit"
+
+Modifier le dernier commit :
+
+git commit --amend -m "Nouveau message"
+
+Annuler le dernier commit (en gardant les modifications) :
+
+git reset HEAD~
+git reset --soft HEAD~
+
+Annuler le dernier commit (en supprimant les modifications) :
+git reset --hard HEAD~
+
+Voir l'historique des commits :
+
+git log                  # Historique complet
+git log --oneline        # Format compact
+git log --graph          # Graphique des branches
+git log -p               # Différences incluses
+git log --since="2023-01-01"
+
+5. Les branches <a name="branches"></a>
+
+Les branches permettent de travailler sur des fonctionnalités de manière isolée.
+
+Lister toutes les branches :
+git branch
+
+Créer une nouvelle branche :
+git branch nom_de_la_branche
+
+Se déplacer vers une branche :
+git checkout nom_de_la_branche
+
+Créer et se déplacer vers une nouvelle branche :
+git checkout -b nouvelle_branche
+
+Supprimer une branche locale :
+git branch -d nom_de_la_branche      # Suppression sécurisée
+git branch -D nom_de_la_branche      # Suppression forcée
+
+Renommer la branche courante :
+git branch -m nouveau_nom
+
+6. Fusion et résolution de conflits <a name="fusion"></a>
+
+Lorsque plusieurs branches sont fusionnées, des conflits peuvent survenir.
+
+Fusionner une branche dans la branche courante :
+git merge nom_de_la_branche
+
+Résoudre un conflit :
+
+Git marquera les fichiers en conflit.
+
+Modifiez manuellement les fichiers pour résoudre le conflit.
+
+Ensuite, ajoutez et commitez les modifications :
+
+git add fichier_en_conflit
+git commit -m "Résolution du conflit"
+
+Annuler un merge en cours de conflit :
+git merge --abort
+
+7. Travail avec les dépôts distants <a name="depots-distants"></a>
+
+Les dépôts distants sont utilisés pour partager le code avec d'autres utilisateurs.
+
+Ajouter un dépôt distant :
+git remote add origin https://github.com/utilisateur/depot.git
+
+Voir les dépôts distants :
+git remote -v
+
+Récupérer les modifications sans fusionner :
+git fetch origin
+
+Récupérer et fusionner les modifications 
+:
+git pull origin nom_de_la_branche
+
+Pousser les modifications vers le dépôt distant :
+
+git push origin nom_de_la_branche
+
+Supprimer une branche distante :
+git push origin --delete nom_de_la_branche
+
+Suivre une branche distante :
+
+git branch --set-upstream-to=origin/nom_de_la_branche nom_de_la_branche
+
+8. Stash - Mettre de côté des modifications <a name="stash"></a>
+
+Le stash permet de mettre de côté des modifications non terminées.
+
+Mettre de côté les modifications non commitées :
+
+git stash
+git stash save "Message descriptif"
+
+Lister tous les stashes :
+git stash list
+
+Récupérer et appliquer le dernier stash :
+git stash pop
+
+Appliquer un stash sans le supprimer :
+git stash apply
+git stash apply stash@{n}    # Appliquer un stash spécifique
+
+Supprimer un stash spécifique :
+
+git stash drop stash@{n}
+
+Vider toute la liste de stash :
+git stash clear
+
+9. Commandes avancées et bonnes pratiques <a name="avance"></a>
+
+Ignorer des fichiers avec .gitignore :
+
+Le fichier .gitignore permet d'indiquer à Git quels fichiers ne doivent pas être suivis.
+
+# Exemple de fichier .gitignore
+
+echo "node_modules/" >> .gitignore
+echo ".env" >> .gitignore
+
+Taguer une version :
+
+git tag v1.0.0
+git tag -a v1.0.0 -m "Version 1.0.0"
+git push origin --tags
+
+Chercher dans l'historique :
+
+git grep "motif"          # Chercher du texte dans les fichiers
+git log --grep="motif"    # Chercher dans les messages de commit
+
+Nettoyer les fichiers non suivis :
+
+git clean -n              # Voir ce qui sera supprimé
+git clean -f              # Supprimer les fichiers non suivis
+git clean -fd             # Supprimer fichiers et dossiers non suivis
+
+Rebase interactif (pour réécrire l'historique) :
+
+git rebase -i HEAD~3
+
+Bisect pour trouver un commit qui a introduit un bug :
+
+git bisect start
+git bisect bad
+git bisect good commit_sha
+
+# Tester à chaque étape
+
+git bisect reset
+
+Workflow typique
+
+Voici un workflow typique pour travailler efficacement avec Git :
+
+Mettre à jour le dépôt local :
+
+git pull origin main
+
+
+Créer une nouvelle branche pour une fonctionnalité :
+
+git checkout -b feature/nouvelle-fonctionnalite
+
+
+Développer et commiter régulièrement :
+
+git add -A
+git commit -m "Ajout de la nouvelle fonctionnalité"
+
+
+Pousser la branche :
+
+git push
+
+
+###########################################################################################################################################################################################################################
+###########################################################################################################################################################################################################################
